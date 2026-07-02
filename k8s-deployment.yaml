@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-app-sre-deployment
+  labels:
+    app: mi-app-sre
+spec:
+  replicas: 2 # <-- ¡SRE Power! Le pedimos a K8s que mantenga SIEMPRE 2 copias vivas
+  selector:
+    matchLabels:
+      app: mi-app-sre
+  template:
+    metadata:
+      labels:
+        app: mi-app-sre
+    spec:
+      containers:
+      - name: web-app
+        image: mi-app-sre:v1 # Usaremos la imagen local que compilamos al inicio
+        imagePullPolicy: IfNotPresent # Le dice a K8s que use la imagen que ya está en tu Mac
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          value: "mongodb://localhost:27017/sre_db" # Temporal por ahora
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-app-sre-service
+spec:
+  type: NodePort # Nos permite exponer el puerto hacia tu Mac
+  selector:
+    app: mi-app-sre
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30080 # <-- Puerto en tu Mac para probarlo
