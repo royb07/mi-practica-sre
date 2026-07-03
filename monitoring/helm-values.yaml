@@ -1,0 +1,16 @@
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 2Gi # Guardamos 2GB para el historial de métricas
+
+grafana:
+  persistence:
+    enabled: true
+    storageClassName: "hostpath" # El almacenamiento local de tu Mac
+    size: 1Gi
+  adminPassword: "MiPasswordSRESupremo123" # Dejamos una clave fija para no tener que buscarla con comandos raros
