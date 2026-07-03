@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: mi-app-sre-alertas
+  namespace: monitoring
+  labels:
+    release: kube-prometheus # Clave para que Prometheus lo absorba
+spec:
+  groups:
+  - name: mi-app-alertas-grupo
+    rules:
+    - alert: AppContenedorCaido
+      expr: kube_pod_container_status_running{container="web-app"} == 0
+      for: 1m # Si pasa 1 minuto entero caído, se activa
+      labels:
+        severity: critical
+      annotations:
+        summary: "¡ALERTA CRÍTICA! El contenedor de la app se ha caído"
+        description: "El Pod {{ $labels.pod }} en el namespace {{ $labels.namespace }} dejó de reportar estado Running."
