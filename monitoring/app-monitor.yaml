@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: mi-app-sre-monitor
+  namespace: monitoring # Lo ponemos en el espacio de monitoreo
+  labels:
+    release: kube-prometheus # Etiqueta clave para que Prometheus lo reconozca automáticamente
+spec:
+  selector:
+    matchLabels:
+      app: mi-app-sre # <-- ¡Ojo aquí! Apesta al mismo label de tu app en k8s-deployment.yaml
+  endpoints:
+  - port: web # El nombre del puerto que usará para escuchar
+    interval: 10s # Cada 10 segundos Prometheus irá a medir la app

@@ -18,6 +18,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
+          name: web #Agrego esta línea para bautizar el puerto
         env:
         - name: DATABASE_URL
           value: "mongodb://mongodb-service:27017/sre_db" # <-- Mantenemos el puerto falso
