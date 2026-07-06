@@ -1,4 +1,3 @@
-# 1. Definimos qué proveedor vamos a usar (en este caso, el sistema de archivos local)
 terraform {
   required_providers {
     local = {
@@ -8,8 +7,15 @@ terraform {
   }
 }
 
-# 2. Declaramos el recurso que queremos que Terraform administre
-resource "local_file" "infra_status" {
-  filename = "${path.module}/estado_servidor.txt"
-  content  = "Servidor SRE inicializado con éxito. Estado: OPERATIVO. Proyecto del futuro papá en marcha.🚀"
+resource "local_file" "servidor_config" {
+  filename = "${path.module}/config_${var.entorno}.json"
+  content  = <<EOF
+{
+  "project": "${var.nombre_proyecto}",
+  "environment": "${var.entorno}",
+  "status": "OPERATIONAL",
+  "build": "2026.07.06",
+  "msg": "Motores encendidos y variables dominadas con exito."
+}
+EOF
 }
