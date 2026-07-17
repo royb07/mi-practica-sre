@@ -1,11 +1,9 @@
 variable "entorno" {
-  description = "El entorno de despliegue (dev, staging, prod)"
   type        = string
-  default     = "dev"
+  description = "El entorno de despliegue (dev o prod)"
 }
 
 variable "nombre_proyecto" {
-  description = "Nombre del proyecto SRE corporativo"
   type        = string
-  default     = "mi-app-sre-pro"
+  description = "Nombre general del proyecto"
 }

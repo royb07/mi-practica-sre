@@ -7,22 +7,21 @@ terraform {
   }
 }
 
-# Configura el proveedor de Docker para que hable con tu Docker Desktop
-provider "docker" {}
-
-# 1. Le decimos a Terraform que se descargue la imagen oficial de Nginx
+# 1. Descarga la imagen de Nginx
 resource "docker_image" "nginx_img" {
-  name         = "nginx:latest"
+  name         = "nginx:1.25.3-alpine"
   keep_locally = false
+  force_remove = true #Permite eliminar la imagen o actualizarla sin que exista conflicto entre docker y Terraform porque hay varios ambientes (DEv y Prod) que lo estan usando
 }
 
-# 2. Le decimos que encienda el contenedor usando esa imagen
+# 2. Crea el contenedor usando las variables
 resource "docker_container" "nginx_srv" {
   image = docker_image.nginx_img.image_id
   name  = "servidor-${var.nombre_proyecto}-${var.entorno}"
-  
+
   ports {
     internal = 80
-    external = var.entorno == "prod" ? 8081 : 8080 # Si es prod usa el 8081, si no el 8080
+    # Si es prod usa 8081, si no (dev) usa 8080
+    external = var.entorno == "prod" ? 8081 : 8080
   }
 }
